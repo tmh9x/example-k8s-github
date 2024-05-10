@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           context: ./backend
           push: true
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install Dependencies and Build Artifact
         run: |
@@ -38,7 +38,7 @@ jobs:
           NODE_ENV: production
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: frontend
           path: frontend/dist/frontend/browser/
@@ -52,7 +52,7 @@ jobs:
           name: frontend
 
       - name: Deploy Frontend
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
