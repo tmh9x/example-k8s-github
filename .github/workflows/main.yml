@@ -25,13 +25,12 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest
 
       - name: Deploy Backend
+        uses: addnab/docker-run-action@v3
         run: |
-          sudo apt update
-          sudo snap install docker
           echo "$SSH_KEY_PEM" > ./ssh-key.pem
           chmod 600 ./ssh-key.pem
           ls -la
-          ssh -i ssh-key.pem -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 ***/example-k8s-github:latest"
+          ssh -i ssh-key.pem -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 tmh9x/example-k8s-github:latest"
 
   build_artifact:
     runs-on: ubuntu-latest
