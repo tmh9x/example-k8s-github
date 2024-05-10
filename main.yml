@@ -1,0 +1,70 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/gitlab_example-eks:${{ github.ref }}
+
+      - name: Deploy Backend
+        run: |
+          ssh -i $SSH_KEY_PEM -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 ${{ secrets.DOCKER_USERNAME }}/gitlab_example-eks:${{ github.ref }}"
+        env:
+          SSH_KEY_PEM: ${{ secrets.SSH_KEY_PEM }}
+
+  build_artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies and Build Artifact
+        run: |
+          cd frontend
+          npm install
+          npm run build:prod
+        working-directory: ./frontend
+        env:
+          NODE_ENV: production
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend
+          path: frontend/dist/frontend/browser/
+
+  deploy_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: frontend
+
+      - name: Deploy Frontend
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Sync to S3
+        run: aws s3 sync frontend/dist/frontend/browser/ s3://${{ secrets.S3_BUCKET_NAME }}
+        env:
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
