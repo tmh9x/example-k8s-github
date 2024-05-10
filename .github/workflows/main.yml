@@ -8,13 +8,6 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug SSH Key
-        run: |
-          echo "SSH Key PEM:"
-          echo $SSH_KEY_PEM
-          ls -la
-          echo "------"
-
       - name: Checkout Repository
         uses: actions/checkout@v2
 
@@ -33,14 +26,10 @@ jobs:
 
       - name: Deploy Backend
         run: |
-          # echo $SSH_KEY_PEM > ./ssh_key.pem
-          # ls -la
-          # chmod 600 ./ssh_key.pem
-          echo $SSH_KEY_PEM
+          echo $SSH_KEY_PEM > ./ssh_key.pem
+          chmod 600 ./ssh-key.pem
+          ls -la
           ssh -i $SSH_KEY_PEM -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com
-          # ssh -i "$SSH_KEY_PEM" -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest"
-          # env:
-          #   SSH_KEY_PEM: ${{ secrets.SSH_KEY_PEM }}
 
   build_artifact:
     runs-on: ubuntu-latest
