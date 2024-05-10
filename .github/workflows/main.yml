@@ -26,6 +26,8 @@ jobs:
 
       - name: Deploy Backend
         run: |
+          sudo apt update
+          sudo apt install docker-ce
           echo "$SSH_KEY_PEM" > ./ssh-key.pem
           chmod 600 ./ssh-key.pem
           ls -la
