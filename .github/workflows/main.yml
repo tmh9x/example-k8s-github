@@ -14,7 +14,7 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:${{ github.ref }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest
 
       - name: Deploy Backend
         run: |
