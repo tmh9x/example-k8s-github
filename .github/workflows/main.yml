@@ -29,7 +29,7 @@ jobs:
           echo $SSH_KEY_PEM > ./ssh-key.pem
           chmod 600 ./ssh-key.pem
           ls -la
-          ssh -i $SSH_KEY_PEM -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com
+          ssh -i ssh-key.pem -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com
 
   build_artifact:
     runs-on: ubuntu-latest
