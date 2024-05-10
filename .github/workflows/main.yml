@@ -31,8 +31,10 @@ jobs:
           ls -la
 
       - name: Deploy Backend
-        run: |
-          ssh -i ./ssh-key.pem -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest"
+        uses: addnab/docker-run-action@v3
+        with:
+          run: |
+            ssh -i ./ssh-key.pem -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest"
 
   build_artifact:
     runs-on: ubuntu-latest
