@@ -25,8 +25,9 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest
 
       - name: Deploy Backend
-        uses: addnab/docker-run-action@v3
         run: |
+          sudo apt update
+          sudo apt install -y docker.io
           echo "$SSH_KEY_PEM" > ./ssh-key.pem
           chmod 600 ./ssh-key.pem
           ls -la
