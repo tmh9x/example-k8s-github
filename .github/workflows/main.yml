@@ -26,8 +26,8 @@ jobs:
 
       - name: Deploy Backend
         run: |
-          sudo apt update
-          sudo apt install -y docker.io
+          sudo DEBIAN_FRONTEND=noninteractive apt update -y
+          sudo DEBIAN_FRONTEND=noninteractive apt install -y docker.io
           echo "$SSH_KEY_PEM" > ./ssh-key.pem
           chmod 600 ./ssh-key.pem
           ls -la
