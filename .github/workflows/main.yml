@@ -22,15 +22,9 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest
 
-      - name: Save secret to file
-        run: |
-          echo $SSH_KEY_PEM > SSH_KEY_PEM.pem
-        env:
-          SSH_KEY_PEM: ${{ secrets.SSH_KEY_PEM }}
-
       - name: Deploy Backend
         run: |
-          ssh -i $SSH_KEY_PEM -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest"
+          ssh -i <(echo "$SSH_KEY_PEM") -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest"
         env:
           SSH_KEY_PEM: ${{ secrets.SSH_KEY_PEM }}
 
@@ -64,7 +58,7 @@ jobs:
         with:
           name: frontend
 
-      - name: Deploy Frontend
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
