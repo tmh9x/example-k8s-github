@@ -29,7 +29,7 @@ jobs:
           # echo $SSH_KEY_PEM > ./ssh_key.pem
           # ls -la
           # chmod 600 ./ssh_key.pem
-          ssh -i ${{ secrets.SSH_KEY_PEM }} -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com
+          ssh -i $SSH_KEY_PEM -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com
           # ssh -i "$SSH_KEY_PEM" -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest"
           # env:
           #   SSH_KEY_PEM: ${{ secrets.SSH_KEY_PEM }}
