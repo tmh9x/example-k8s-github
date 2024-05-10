@@ -8,6 +8,13 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug SSH Key
+        run: |
+          echo "SSH Key PEM:"
+          echo $SSH_KEY_PEM
+          ls -la
+          echo "------"
+
       - name: Checkout Repository
         uses: actions/checkout@v2
 
