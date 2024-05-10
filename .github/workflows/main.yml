@@ -26,8 +26,7 @@ jobs:
 
       - name: Deploy Backend
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
+          docker pull docker:latest
           echo "$SSH_KEY_PEM" > ./ssh-key.pem
           chmod 600 ./ssh-key.pem
           ls -la
