@@ -24,14 +24,15 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest
 
+      - name: Prepare SSH Key
+        run: |
+          echo "$SSH_KEY_PEM" > ./ssh-key.pem
+          chmod 600 ./ssh-key.pem
+          ls -la
+
       - name: Deploy Backend
-        uses: addnab/docker-run-action@v3
-        with:
-          run: |
-            echo "$SSH_KEY_PEM" > ./ssh-key.pem
-            chmod 600 ./ssh-key.pem
-            ls -la
-            ssh -i ssh-key.pem -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 tmh9x/example-k8s-github:latest"
+        run: |
+          ssh -i ./ssh-key.pem -o StrictHostKeyChecking=no ec2-user@ec2-3-70-99-149.eu-central-1.compute.amazonaws.com "sudo docker run -d -p 80:3000 ${{ secrets.DOCKER_USERNAME }}/example-k8s-github:latest"
 
   build_artifact:
     runs-on: ubuntu-latest
